@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Definitions</key>
+	<dict>
+		<key>TFrameworks/HTMLParser/HTMLNode.h</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>HTMLParser</string>
+			</array>
+			<key>Path</key>
+			<string>HTMLParser/HTMLNode.h</string>
+		</dict>
+		<key>TFrameworks/HTMLParser/HTMLNode.m</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>HTMLParser</string>
+			</array>
+			<key>Path</key>
+			<string>HTMLParser/HTMLNode.m</string>
+		</dict>
+		<key>TFrameworks/HTMLParser/HTMLParser.h</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>HTMLParser</string>
+			</array>
+			<key>Path</key>
+			<string>HTMLParser/HTMLParser.h</string>
+		</dict>
+		<key>TFrameworks/HTMLParser/HTMLParser.m</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>HTMLParser</string>
+			</array>
+			<key>Path</key>
+			<string>HTMLParser/HTMLParser.m</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>HTMLParser Template.</string>
+	<key>Identifier</key>
+	<string>shawnteng.htmlparser</string>
+	<key>Nodes</key>
+	<array>
+		<string>TFrameworks/HTMLParser/HTMLNode.h</string>
+		<string>TFrameworks/HTMLParser/HTMLNode.m</string>
+		<string>TFrameworks/HTMLParser/HTMLParser.h</string>
+		<string>TFrameworks/HTMLParser/HTMLParser.m</string>
+	</array>
+</dict>
+</plist>
