@@ -56,5 +56,7 @@
 		<string>TFrameworks/HTMLParser/HTMLParser.h</string>
 		<string>TFrameworks/HTMLParser/HTMLParser.m</string>
 	</array>
+	<key>Kind</key>
+	<string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
 </dict>
 </plist>
