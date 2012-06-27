@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Definitions</key>
+	<dict>
+		<key>TFrameworks/JSONKit/JSONKit.h</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>JSONKit</string>
+			</array>
+			<key>Path</key>
+			<string>JSONKit/JSONKit.h</string>
+		</dict>
+		<key>TFrameworks/JSONKit/JSONKit.m</key>
+		<dict>
+			<key>Group</key>
+			<array>
+				<string>TFrameworks</string>
+				<string>JSONKit</string>
+			</array>
+			<key>Path</key>
+			<string>JSONKit/JSONKit.m</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>JSON Kit Template.</string>
+	<key>Identifier</key>
+	<string>shawnteng.jsonkit</string>
+	<key>Nodes</key>
+	<array>
+		<string>TFrameworks/JSONKit/JSONKit.h</string>
+		<string>TFrameworks/JSONKit/JSONKit.m</string>
+	</array>
+	<key>Kind</key>
+	<string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
+</dict>
+</plist>
