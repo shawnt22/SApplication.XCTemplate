@@ -13,6 +13,22 @@
 	<true/>
 	<key>Definitions</key>
 	<dict>
+		<key>___VARIABLE_classPrefix:identifier___AppDelegate.m:applicationdidFinishLaunchingWithOptions</key>
+		<dict>
+			<key>Beginning</key>
+			<string>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.window = ___RP___[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]___AR___;
+    // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];</string>
+			<key>End</key>
+			<string>    [self.window makeKeyAndVisible];
+    return YES;
+}
+</string>
+			<key>Indent</key>
+			<integer>1</integer>
+		</dict>
 		<key>Resource/Image</key>
 		<dict>
 			<key>Group</key>
@@ -258,6 +274,7 @@
 	<string>shawnteng.base</string>
 	<key>Nodes</key>
 	<array>
+		<string>___PACKAGENAME___-Prefix.pch:Availability:iPhoneAvailability:3</string>
 		<string>Resource/Image</string>
 		<string>Resource/Document</string>
 		<string>Classes/Common/Sconfiger.h</string>
@@ -297,6 +314,11 @@
 		<dict>
 			<key>Debug</key>
 			<dict>
+				<key>GCC_PREPROCESSOR_DEFINITIONS - 2</key>
+				<array>
+					<string>DEBUG</string>
+					<string>TARGET_IPHONE_DEBUG</string>
+				</array>
 				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
 				<array>
 					<string>DEBUG</string>
