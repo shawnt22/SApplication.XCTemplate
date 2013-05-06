@@ -33,3 +33,9 @@ typedef enum _ASIAuthenticationType {
 @property (assign) BOOL didEnableRotationNotifications;
 @property (retain, nonatomic) UIViewController *presentingController;
 @end
+
+#pragma mark - Util
+@interface ASIAutorotatingViewController (Util)
++ (void)viewController:(UIViewController *)viewController dismissViewControllerAnimated:(BOOL)animated;
++ (void)viewController:(UIViewController *)viewController presentModalViewController:(UIViewController *)modalController Animated:(BOOL)animated;
+@end

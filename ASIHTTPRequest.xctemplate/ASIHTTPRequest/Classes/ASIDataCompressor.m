@@ -73,14 +73,14 @@
 	NSUInteger halfLength = length/2;
 	
 	// We'll take a guess that the compressed data will fit in half the size of the original (ie the max to compress at once is half DATA_CHUNK_SIZE), if not, we'll increase it below
-	NSMutableData *outputData = [NSMutableData dataWithLength:length/2]; 
+	NSMutableData *outputData = [NSMutableData dataWithLength:length/2];
 	
 	int status;
 	
 	zStream.next_in = bytes;
 	zStream.avail_in = (unsigned int)length;
 	zStream.avail_out = 0;
-
+    
 	NSInteger bytesProcessedAlready = zStream.total_out;
 	while (zStream.avail_out == 0) {
 		
@@ -101,7 +101,7 @@
 			return NO;
 		}
 	}
-
+    
 	// Set real length
 	[outputData setLength: zStream.total_out-bytesProcessedAlready];
 	return outputData;
@@ -126,7 +126,7 @@
 + (BOOL)compressDataFromFile:(NSString *)sourcePath toFile:(NSString *)destinationPath error:(NSError **)err
 {
 	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
-
+    
 	// Create an empty file at the destination path
 	if (![fileManager createFileAtPath:destinationPath contents:[NSData data] attributes:nil]) {
 		if (err) {
@@ -159,7 +159,7 @@
 		
 		// Read some data from the file
 		readLength = [inputStream read:inputData maxLength:DATA_CHUNK_SIZE];
-
+        
 		// Make sure nothing went wrong
 		if ([inputStream streamStatus] == NSStreamEventErrorOccurred) {
 			if (err) {
@@ -198,7 +198,7 @@
     }
 	[inputStream close];
 	[outputStream close];
-
+    
 	NSError *error = [compressor closeStream];
 	if (error) {
 		if (err) {
@@ -206,13 +206,13 @@
 		}
 		return NO;
 	}
-
+    
 	return YES;
 }
 
 + (NSError *)deflateErrorWithCode:(int)code
 {
-	return [NSError errorWithDomain:NetworkRequestErrorDomain code:ASICompressionError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Compression of data failed with code %hi",code],NSLocalizedDescriptionKey,nil]];
+	return [NSError errorWithDomain:NetworkRequestErrorDomain code:ASICompressionError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Compression of data failed with code %i",code],NSLocalizedDescriptionKey,nil]];
 }
 
 @synthesize streamReady;

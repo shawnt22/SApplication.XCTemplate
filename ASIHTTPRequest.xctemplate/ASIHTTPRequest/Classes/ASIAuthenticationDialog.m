@@ -76,7 +76,7 @@ static const NSUInteger kDomainSection = 1;
 {
 	if ((self = [self initWithNibName:nil bundle:nil])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-
+        
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
 #endif
@@ -98,7 +98,7 @@ static const NSUInteger kDomainSection = 1;
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 	}
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-
+    
 	[request release];
 	[tableView release];
 	[presentingController.view removeFromSuperview];
@@ -141,9 +141,9 @@ static const NSUInteger kDomainSection = 1;
 		case UIDeviceOrientationPortraitUpsideDown: angle = 180; break;
 		default: break;
 	}
-
+    
 	CGRect f = [[UIScreen mainScreen] applicationFrame];
-
+    
 	// Swap the frame height and width if necessary
  	if (UIDeviceOrientationIsLandscape(o)) {
 		CGFloat t;
@@ -151,42 +151,42 @@ static const NSUInteger kDomainSection = 1;
 		f.size.width = f.size.height;
 		f.size.height = t;
 	}
-
+    
 	CGAffineTransform previousTransform = self.view.layer.affineTransform;
 	CGAffineTransform newTransform = CGAffineTransformMakeRotation((CGFloat)(angle * M_PI / 180.0));
-
+    
 	// Reset the transform so we can set the size
 	self.view.layer.affineTransform = CGAffineTransformIdentity;
 	self.view.frame = (CGRect){ { 0, 0 }, f.size};
-
+    
 	// Revert to the previous transform for correct animation
 	self.view.layer.affineTransform = previousTransform;
-
+    
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:0.3];
-
+    
 	// Set the new transform
 	self.view.layer.affineTransform = newTransform;
-
+    
 	// Fix the view origin
 	self.view.frame = (CGRect){ { f.origin.x, f.origin.y },self.view.frame.size};
     [UIView commitAnimations];
 }
-		 
+
 #pragma mark utilities
 
 - (UIViewController *)presentingController
 {
 	if (!presentingController) {
 		presentingController = [[ASIAutorotatingViewController alloc] initWithNibName:nil bundle:nil];
-
+        
 		// Attach to the window, but don't interfere.
 		UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
 		[window addSubview:[presentingController view]];
 		[[presentingController view] setFrame:CGRectZero];
 		[[presentingController view] setUserInteractionEnabled:NO];
 	}
-
+    
 	return presentingController;
 }
 
@@ -217,9 +217,9 @@ static const NSUInteger kDomainSection = 1;
 + (void)dismiss
 {
 	if ([sharedDialog respondsToSelector:@selector(presentingViewController)])
-		[[sharedDialog presentingViewController] dismissModalViewControllerAnimated:YES];
-	else 
-		[[sharedDialog parentViewController] dismissModalViewControllerAnimated:YES];
+        [ASIAutorotatingViewController viewController:[sharedDialog presentingController] dismissViewControllerAnimated:YES];
+	else
+        [ASIAutorotatingViewController viewController:[sharedDialog presentingController] dismissViewControllerAnimated:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -237,9 +237,9 @@ static const NSUInteger kDomainSection = 1;
 		[[self class] dismiss];
 	} else {
 		if ([self respondsToSelector:@selector(presentingViewController)])
-			[[self presentingViewController] dismissModalViewControllerAnimated:YES];
+            [ASIAutorotatingViewController viewController:[self presentingController] dismissViewControllerAnimated:YES];
 		else
-			[[self parentViewController] dismissModalViewControllerAnimated:YES];
+            [ASIAutorotatingViewController viewController:[self presentingController] dismissViewControllerAnimated:YES];
 	}
 }
 
@@ -271,51 +271,51 @@ static const NSUInteger kDomainSection = 1;
 	while ((v = [[[self view] subviews] lastObject])) {
 		[v removeFromSuperview];
 	}
-
+    
 	// Setup toolbar
 	UINavigationBar *bar = [[[UINavigationBar alloc] init] autorelease];
 	[bar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-
+    
 	UINavigationItem *navItem = [[[UINavigationItem alloc] init] autorelease];
 	bar.items = [NSArray arrayWithObject:navItem];
-
+    
 	[[self view] addSubview:bar];
-
+    
 	[self showTitle];
-
+    
 	// Setup toolbar buttons
 	if ([self type] == ASIProxyAuthenticationType) {
 		[navItem setTitle:[[self request] proxyHost]];
 	} else {
 		[navItem setTitle:[[[self request] url] host]];
 	}
-
+    
 	[navItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAuthenticationFromDialog:)] autorelease]];
 	[navItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"Login" style:UIBarButtonItemStyleDone target:self action:@selector(loginWithCredentialsFromDialog:)] autorelease]];
-
+    
 	// We show the login form in a table view, similar to Safari's authentication dialog
 	[bar sizeToFit];
 	CGRect f = [[self view] bounds];
 	f.origin.y = [bar frame].size.height;
 	f.size.height -= f.origin.y;
-
+    
 	[self setTableView:[[[UITableView alloc] initWithFrame:f style:UITableViewStyleGrouped] autorelease]];
 	[[self tableView] setDelegate:self];
 	[[self tableView] setDataSource:self];
 	[[self tableView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[[self view] addSubview:[self tableView]];
-
+    
 	// Force reload the table content, and focus the first field to show the keyboard
 	[[self tableView] reloadData];
 	[[[[[self tableView] cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].contentView subviews] objectAtIndex:0] becomeFirstResponder];
-
+    
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
 		[self setModalPresentationStyle:UIModalPresentationFormSheet];
 	}
 #endif
-
-	[[self presentingController] presentModalViewController:self animated:YES];
+    
+    [ASIAutorotatingViewController viewController:[self presentingController] presentModalViewController:self Animated:YES];
 }
 
 #pragma mark button callbacks
@@ -356,13 +356,13 @@ static const NSUInteger kDomainSection = 1;
 - (void)loginWithCredentialsFromDialog:(id)sender
 {
 	for (ASIHTTPRequest *theRequest in [self requestsRequiringTheseCredentials]) {
-
+        
 		NSString *username = [[self usernameField] text];
 		NSString *password = [[self passwordField] text];
-
+        
 		if (username == nil) { username = @""; }
 		if (password == nil) { password = @""; }
-
+        
 		if ([self type] == ASIProxyAuthenticationType) {
 			[theRequest setProxyUsername:username];
 			[theRequest setProxyPassword:password];
@@ -370,7 +370,7 @@ static const NSUInteger kDomainSection = 1;
 			[theRequest setUsername:username];
 			[theRequest setPassword:password];
 		}
-
+        
 		// Handle NTLM domains
 		NSString *scheme = ([self type] == ASIStandardAuthenticationType) ? [[self request] authenticationScheme] : [[self request] proxyAuthenticationScheme];
 		if ([scheme isEqualToString:(NSString *)kCFHTTPAuthenticationSchemeNTLM]) {
@@ -381,7 +381,7 @@ static const NSUInteger kDomainSection = 1;
 				[theRequest setDomain:domain];
 			}
 		}
-
+        
 		[theRequest retryUsingSuppliedCredentials];
 		[requestsNeedingAuthentication removeObject:theRequest];
 	}
@@ -435,18 +435,18 @@ static const NSUInteger kDomainSection = 1;
 #else
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectMake(0,0,0,0) reuseIdentifier:nil] autorelease];
 #endif
-
+    
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
+    
 	CGRect f = CGRectInset([cell bounds], 10, 10);
 	UITextField *textField = [[[UITextField alloc] initWithFrame:f] autorelease];
 	[textField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[textField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[textField setAutocorrectionType:UITextAutocorrectionTypeNo];
-
+    
 	NSUInteger s = [indexPath section];
 	NSUInteger r = [indexPath row];
-
+    
 	if (s == kUsernameSection && r == kUsernameRow) {
 		[textField setPlaceholder:@"User"];
 	} else if (s == kPasswordSection && r == kPasswordRow) {
@@ -456,7 +456,7 @@ static const NSUInteger kDomainSection = 1;
 		[textField setPlaceholder:@"Domain"];
 	}
 	[cell.contentView addSubview:textField];
-
+    
 	return cell;
 }
 
@@ -475,7 +475,7 @@ static const NSUInteger kDomainSection = 1;
 		// If we're using Basic authentication and the connection is not using SSL, we'll show the plain text message
 		if ([[[self request] authenticationScheme] isEqualToString:(NSString *)kCFHTTPAuthenticationSchemeBasic] && ![[[[self request] url] scheme] isEqualToString:@"https"]) {
 			return @"Password will be sent in the clear.";
-		// We are using Digest, NTLM, or any scheme over SSL
+            // We are using Digest, NTLM, or any scheme over SSL
 		} else {
 			return @"Password will be sent securely.";
 		}
@@ -491,3 +491,25 @@ static const NSUInteger kDomainSection = 1;
 @synthesize didEnableRotationNotifications;
 @synthesize presentingController;
 @end
+
+
+
+#pragma mark - Util
+#import "Util.h"
+@implementation ASIAutorotatingViewController (Util)
++ (void)viewController:(UIViewController *)viewController dismissViewControllerAnimated:(BOOL)animated {
+    if ([Util isCurrentOSVersionLowerThanRequiredVersion:@"6.0"]) {
+        [viewController dismissModalViewControllerAnimated:animated];
+    } else {
+        [viewController dismissViewControllerAnimated:animated completion:NULL];
+    }
+}
++ (void)viewController:(UIViewController *)viewController presentModalViewController:(UIViewController *)modalController Animated:(BOOL)animated {
+    if ([Util isCurrentOSVersionLowerThanRequiredVersion:@"6.0"]) {
+        [viewController presentModalViewController:modalController animated:animated];
+    } else {
+        [viewController presentViewController:modalController animated:animated completion:NULL];
+    }
+}
+@end
+

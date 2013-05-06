@@ -19,7 +19,7 @@
 + (NSString *)filePathWith:(NSString *)name isDirectory:(BOOL)isDirectory {
 	NSString *path = nil;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
-	if ([paths count] > 0) {	
+	if ([paths count] > 0) {
 		name = isDirectory ? name : [name lastPathComponent];
 		path = [[paths objectAtIndex:0] stringByAppendingPathComponent:name];
 	}
@@ -58,8 +58,8 @@
 	if ([paths count] > 0) {
 		NSString *dPath = [NSString stringWithFormat:@"%@",[paths objectAtIndex:0]];
         return dPath;
-	}	
-	return nil; 
+	}
+	return nil;
 }
 + (BOOL)fileIfExist:(NSString *)filePath {
     BOOL rtn = YES;
@@ -126,7 +126,7 @@
 + (NSString*)formatRefreshTime:(NSDate *)date {
     NSTimeInterval elapsed = abs([date timeIntervalSinceNow]);
 	if (elapsed < S_MINUTE) {
-		return [NSString stringWithString:@"刚刚"];
+		return @"刚刚";
 	}
 	if (elapsed < S_HOUR) {
 		int mins = (int)floor(elapsed/S_MINUTE);
@@ -139,7 +139,7 @@
         return [Util format:date style:@"M-d H:mm"];
     }
 }
-+ (NSString*)formatRelativeTime:(NSDate *)date {	
++ (NSString*)formatRelativeTime:(NSDate *)date {
 	NSTimeInterval elapsed = abs([date timeIntervalSinceNow]);
 	if (elapsed < S_MINUTE) {
 		int secds = (int)floor(elapsed);
@@ -174,7 +174,7 @@
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateFormat:strFmt];
 	result = [formatter stringFromDate:date];
-	[formatter release];	
+	[formatter release];
 	return result;
 }
 + (NSString*)formatTimeWithSecond:(float)formatSecond {
@@ -184,12 +184,12 @@
     
     NSInteger second = ceilf(formatSecond);
     
-    if (second < S_MINUTE) 
+    if (second < S_MINUTE)
     {
         secondString = [NSString stringWithFormat:@"%02d", second];
-        miniteString = [NSString stringWithString:@"00"];
+        miniteString = @"00";
 	}
-	else if (second < S_HOUR) 
+	else if (second < S_HOUR)
     {
         NSInteger tmpMinite =  second / S_HOUR;
         miniteString = [NSString stringWithFormat:@"%02d", tmpMinite];
@@ -202,7 +202,7 @@
     return rtn;
 }
 + (NSString *)formatVideoRecordTimeWith:(NSTimeInterval)interval {
-    NSString *result = [NSString stringWithString:@"00:00:00"];
+    NSString *result = @"00:00:00";
     
     if (interval < 0) return result;
     
@@ -217,15 +217,15 @@
 + (NSDate *)parseSWTimeFormat:(NSString *)strTime {
 	if ([Util isEmptyString:strTime]) {
 		return nil;
-	}		
+	}
 	return [NSDate dateWithTimeIntervalSince1970:[strTime doubleValue]/1000];
 }
 
 #pragma marc Empty String
 + (BOOL)isEmptyString:(NSString *)string {
-    BOOL result = NO;
-    if (string == nil || [string length] == 0 || [string isEqualToString:@""]) {
-        result = YES;
+    BOOL result = YES;
+    if (string != nil && [string respondsToSelector:@selector(length)] && [string length] != 0) {
+        result = NO;
     }
     return result;
 }
@@ -246,24 +246,24 @@
 + (NSString *)urlEncode:(NSString *)originalString stringEncoding:(NSStringEncoding)stringEncoding {
     if ([Util isEmptyString:originalString]) {
 		return nil;
-	}	
+	}
 	//!  @  $  &  (  )  =  +  ~  `  ;  '  :  ,  /  ?
 	//%21%40%24%26%28%29%3D%2B%7E%60%3B%27%3A%2C%2F%3F
     NSArray *escapeChars = [NSArray arrayWithObjects:@";" , @"/" , @"?" , @":" ,
 							@"@" , @"&" , @"=" , @"+" ,	@"$" , @"," ,
-							@"!", @"'", @"(", @")", @"*", nil];	
-    NSArray *replaceChars = [NSArray arrayWithObjects:@"%3B" , @"%2F" , @"%3F" , @"%3A" , 
+							@"!", @"'", @"(", @")", @"*", nil];
+    NSArray *replaceChars = [NSArray arrayWithObjects:@"%3B" , @"%2F" , @"%3F" , @"%3A" ,
 							 @"%40" , @"%26" , @"%3D" , @"%2B" , @"%24" , @"%2C" ,
-							 @"%21", @"%27", @"%28", @"%29", @"%2A", nil];	
-    int len = [escapeChars count];	
-	NSString *temp = [originalString stringByAddingPercentEscapesUsingEncoding:stringEncoding];	
+							 @"%21", @"%27", @"%28", @"%29", @"%2A", nil];
+    int len = [escapeChars count];
+	NSString *temp = [originalString stringByAddingPercentEscapesUsingEncoding:stringEncoding];
     for(int i = 0; i < len; i++) {
         temp = [temp stringByReplacingOccurrencesOfString:[escapeChars objectAtIndex:i]
 											   withString:[replaceChars objectAtIndex:i]
 												  options:NSLiteralSearch
 													range:NSMakeRange(0, [temp length])];
-    }	
-    NSString *outString = [NSString stringWithString:temp];	
+    }
+    NSString *outString = [NSString stringWithString:temp];
     return outString;
 }
 + (NSString *)md5Hash:(NSString *)content {
@@ -287,7 +287,7 @@
 }
 + (UIImage *)scaleImageWithName:(NSString*)imgname {
     return [[UIImage alloc] initWithCGImage:
-            [Util imageWithName:imgname].CGImage scale:1.0 orientation:UIImageOrientationDown];                
+            [Util imageWithName:imgname].CGImage scale:1.0 orientation:UIImageOrientationDown];
 }
 + (CGGradientRef)newGradientWithColors:(UIColor**)colors locations:(CGFloat*)locations
 								 count:(int)count {
@@ -319,7 +319,7 @@
 #pragma mark Rotate
 + (void)rotateView:(UIView *)view From:(UIInterfaceOrientation)currentOrientation To:(UIInterfaceOrientation)targetOrientation With:(BOOL)animated Delegate:(id)delegate {
 	UIInterfaceOrientation current = currentOrientation;
-	UIInterfaceOrientation orientation = targetOrientation;    
+	UIInterfaceOrientation orientation = targetOrientation;
     
     if ( current == orientation )
         return;
@@ -403,7 +403,7 @@
     }
 	
 	UIView *v = view;
-	if (animated) {	
+	if (animated) {
 		[UIView beginAnimations:@"RotateAnimation" context:NULL];
 		[UIView setAnimationDuration:0.3];
 		//v.transform = CGAffineTransformRotate(v.transform, angle);
@@ -451,7 +451,7 @@
 	if ([platform isEqualToString:@"iPhone1,1"])	return UIDevice1GiPhone;
 	return UIDeviceUnknown;
 }
-+ (BOOL)isCurrentVersionLowerThanRequiredVersion:(NSString *)sysVersion {
++ (BOOL)isCurrentOSVersionLowerThanRequiredVersion:(NSString *)sysVersion {
 	NSString *curVersion = [[UIDevice currentDevice] systemVersion];
 	if ([curVersion compare:sysVersion options:NSNumericSearch] == NSOrderedAscending) {
 		return YES;
@@ -496,41 +496,41 @@
 #include <math.h>
 
 const UInt8 kBase64EncodeTable[64] = {
-	/*  0 */ 'A',	/*  1 */ 'B',	/*  2 */ 'C',	/*  3 */ 'D', 
-	/*  4 */ 'E',	/*  5 */ 'F',	/*  6 */ 'G',	/*  7 */ 'H', 
-	/*  8 */ 'I',	/*  9 */ 'J',	/* 10 */ 'K',	/* 11 */ 'L', 
-	/* 12 */ 'M',	/* 13 */ 'N',	/* 14 */ 'O',	/* 15 */ 'P', 
-	/* 16 */ 'Q',	/* 17 */ 'R',	/* 18 */ 'S',	/* 19 */ 'T', 
-	/* 20 */ 'U',	/* 21 */ 'V',	/* 22 */ 'W',	/* 23 */ 'X', 
-	/* 24 */ 'Y',	/* 25 */ 'Z',	/* 26 */ 'a',	/* 27 */ 'b', 
-	/* 28 */ 'c',	/* 29 */ 'd',	/* 30 */ 'e',	/* 31 */ 'f', 
-	/* 32 */ 'g',	/* 33 */ 'h',	/* 34 */ 'i',	/* 35 */ 'j', 
-	/* 36 */ 'k',	/* 37 */ 'l',	/* 38 */ 'm',	/* 39 */ 'n', 
-	/* 40 */ 'o',	/* 41 */ 'p',	/* 42 */ 'q',	/* 43 */ 'r', 
-	/* 44 */ 's',	/* 45 */ 't',	/* 46 */ 'u',	/* 47 */ 'v', 
-	/* 48 */ 'w',	/* 49 */ 'x',	/* 50 */ 'y',	/* 51 */ 'z', 
-	/* 52 */ '0',	/* 53 */ '1',	/* 54 */ '2',	/* 55 */ '3', 
-	/* 56 */ '4',	/* 57 */ '5',	/* 58 */ '6',	/* 59 */ '7', 
+	/*  0 */ 'A',	/*  1 */ 'B',	/*  2 */ 'C',	/*  3 */ 'D',
+	/*  4 */ 'E',	/*  5 */ 'F',	/*  6 */ 'G',	/*  7 */ 'H',
+	/*  8 */ 'I',	/*  9 */ 'J',	/* 10 */ 'K',	/* 11 */ 'L',
+	/* 12 */ 'M',	/* 13 */ 'N',	/* 14 */ 'O',	/* 15 */ 'P',
+	/* 16 */ 'Q',	/* 17 */ 'R',	/* 18 */ 'S',	/* 19 */ 'T',
+	/* 20 */ 'U',	/* 21 */ 'V',	/* 22 */ 'W',	/* 23 */ 'X',
+	/* 24 */ 'Y',	/* 25 */ 'Z',	/* 26 */ 'a',	/* 27 */ 'b',
+	/* 28 */ 'c',	/* 29 */ 'd',	/* 30 */ 'e',	/* 31 */ 'f',
+	/* 32 */ 'g',	/* 33 */ 'h',	/* 34 */ 'i',	/* 35 */ 'j',
+	/* 36 */ 'k',	/* 37 */ 'l',	/* 38 */ 'm',	/* 39 */ 'n',
+	/* 40 */ 'o',	/* 41 */ 'p',	/* 42 */ 'q',	/* 43 */ 'r',
+	/* 44 */ 's',	/* 45 */ 't',	/* 46 */ 'u',	/* 47 */ 'v',
+	/* 48 */ 'w',	/* 49 */ 'x',	/* 50 */ 'y',	/* 51 */ 'z',
+	/* 52 */ '0',	/* 53 */ '1',	/* 54 */ '2',	/* 55 */ '3',
+	/* 56 */ '4',	/* 57 */ '5',	/* 58 */ '6',	/* 59 */ '7',
 	/* 60 */ '8',	/* 61 */ '9',	/* 62 */ '+',	/* 63 */ '/'
 };
 
 // '/' is replaced with '_'
 const UInt8 kBase64EncodeTableForJSON[64] = {
-    /*  0 */ 'A',	/*  1 */ 'B',	/*  2 */ 'C',	/*  3 */ 'D', 
-    /*  4 */ 'E',	/*  5 */ 'F',	/*  6 */ 'G',	/*  7 */ 'H', 
-    /*  8 */ 'I',	/*  9 */ 'J',	/* 10 */ 'K',	/* 11 */ 'L', 
-    /* 12 */ 'M',	/* 13 */ 'N',	/* 14 */ 'O',	/* 15 */ 'P', 
-    /* 16 */ 'Q',	/* 17 */ 'R',	/* 18 */ 'S',	/* 19 */ 'T', 
-    /* 20 */ 'U',	/* 21 */ 'V',	/* 22 */ 'W',	/* 23 */ 'X', 
-    /* 24 */ 'Y',	/* 25 */ 'Z',	/* 26 */ 'a',	/* 27 */ 'b', 
-    /* 28 */ 'c',	/* 29 */ 'd',	/* 30 */ 'e',	/* 31 */ 'f', 
-    /* 32 */ 'g',	/* 33 */ 'h',	/* 34 */ 'i',	/* 35 */ 'j', 
-    /* 36 */ 'k',	/* 37 */ 'l',	/* 38 */ 'm',	/* 39 */ 'n', 
-    /* 40 */ 'o',	/* 41 */ 'p',	/* 42 */ 'q',	/* 43 */ 'r', 
-    /* 44 */ 's',	/* 45 */ 't',	/* 46 */ 'u',	/* 47 */ 'v', 
-    /* 48 */ 'w',	/* 49 */ 'x',	/* 50 */ 'y',	/* 51 */ 'z', 
-    /* 52 */ '0',	/* 53 */ '1',	/* 54 */ '2',	/* 55 */ '3', 
-    /* 56 */ '4',	/* 57 */ '5',	/* 58 */ '6',	/* 59 */ '7', 
+    /*  0 */ 'A',	/*  1 */ 'B',	/*  2 */ 'C',	/*  3 */ 'D',
+    /*  4 */ 'E',	/*  5 */ 'F',	/*  6 */ 'G',	/*  7 */ 'H',
+    /*  8 */ 'I',	/*  9 */ 'J',	/* 10 */ 'K',	/* 11 */ 'L',
+    /* 12 */ 'M',	/* 13 */ 'N',	/* 14 */ 'O',	/* 15 */ 'P',
+    /* 16 */ 'Q',	/* 17 */ 'R',	/* 18 */ 'S',	/* 19 */ 'T',
+    /* 20 */ 'U',	/* 21 */ 'V',	/* 22 */ 'W',	/* 23 */ 'X',
+    /* 24 */ 'Y',	/* 25 */ 'Z',	/* 26 */ 'a',	/* 27 */ 'b',
+    /* 28 */ 'c',	/* 29 */ 'd',	/* 30 */ 'e',	/* 31 */ 'f',
+    /* 32 */ 'g',	/* 33 */ 'h',	/* 34 */ 'i',	/* 35 */ 'j',
+    /* 36 */ 'k',	/* 37 */ 'l',	/* 38 */ 'm',	/* 39 */ 'n',
+    /* 40 */ 'o',	/* 41 */ 'p',	/* 42 */ 'q',	/* 43 */ 'r',
+    /* 44 */ 's',	/* 45 */ 't',	/* 46 */ 'u',	/* 47 */ 'v',
+    /* 48 */ 'w',	/* 49 */ 'x',	/* 50 */ 'y',	/* 51 */ 'z',
+    /* 52 */ '0',	/* 53 */ '1',	/* 54 */ '2',	/* 55 */ '3',
+    /* 56 */ '4',	/* 57 */ '5',	/* 58 */ '6',	/* 59 */ '7',
     /* 60 */ '8',	/* 61 */ '9',	/* 62 */ '+',	/* 63 */ '_'
 };
 
@@ -538,7 +538,7 @@ const UInt8 kBase64EncodeTableForJSON[64] = {
 /*
  -1 = Base64 end of data marker.
  -2 = White space (tabs, cr, lf, space)
- -3 = Noise (all non whitespace, non-base64 characters) 
+ -3 = Noise (all non whitespace, non-base64 characters)
  -4 = Dangerous noise
  -5 = Illegal noise (null byte)
  */
@@ -726,7 +726,7 @@ bool Base64EncodeDataForJSON(const void *inInputData, size_t inInputDataSize, ch
     
     *ioOutputDataSize = theOutIndex;
     
-    return(true);    
+    return(true);
 }
 
 bool Base64DecodeData(const void *inInputData, size_t inInputDataSize, void *ioOutputData, size_t *ioOutputDataSize)

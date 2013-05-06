@@ -75,7 +75,7 @@
 {
 	if ([self subResource]) {
 		return [NSString stringWithFormat:@"/%@/?%@",[self bucket],[self subResource]];
-	} 
+	}
 	return [NSString stringWithFormat:@"/%@/",[self bucket]];
 }
 
@@ -98,7 +98,7 @@
 		[queryParts addObject:[NSString stringWithFormat:@"delimiter=%@",[[self delimiter] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	}
 	if ([self maxResultCount] > 0) {
-		[queryParts addObject:[NSString stringWithFormat:@"max-keys=%hi",[self maxResultCount]]];
+		[queryParts addObject:[NSString stringWithFormat:@"max-keys=%i",[self maxResultCount]]];
 	}
 	if ([queryParts count]) {
 		NSString* template = @"%@?%@";
@@ -108,7 +108,7 @@
 		[self setURL:[NSURL URLWithString:[NSString stringWithFormat:template,baseURL,[queryParts componentsJoinedByString:@"&"]]]];
 	} else {
 		[self setURL:[NSURL URLWithString:baseURL]];
-
+        
 	}
 }
 

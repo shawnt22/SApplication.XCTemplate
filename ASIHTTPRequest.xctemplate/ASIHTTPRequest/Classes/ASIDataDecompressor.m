@@ -71,7 +71,7 @@
 	
 	NSUInteger halfLength = length/2;
 	NSMutableData *outputData = [NSMutableData dataWithLength:length+halfLength];
-
+    
 	int status;
 	
 	zStream.next_in = bytes;
@@ -122,7 +122,7 @@
 + (BOOL)uncompressDataFromFile:(NSString *)sourcePath toFile:(NSString *)destinationPath error:(NSError **)err
 {
 	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
-
+    
 	// Create an empty file at the destination path
 	if (![fileManager createFileAtPath:destinationPath contents:[NSData data] attributes:nil]) {
 		if (err) {
@@ -144,9 +144,9 @@
 	NSInteger readLength;
 	NSError *theError = nil;
 	
-
+    
 	ASIDataDecompressor *decompressor = [ASIDataDecompressor decompressor];
-
+    
 	NSInputStream *inputStream = [NSInputStream inputStreamWithFileAtPath:sourcePath];
 	[inputStream open];
 	NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:destinationPath append:NO];
@@ -155,7 +155,7 @@
     while ([decompressor streamReady]) {
 		
 		// Read some data from the file
-		readLength = [inputStream read:inputData maxLength:DATA_CHUNK_SIZE]; 
+		readLength = [inputStream read:inputData maxLength:DATA_CHUNK_SIZE];
 		
 		// Make sure nothing went wrong
 		if ([inputStream streamStatus] == NSStreamEventErrorOccurred) {
@@ -169,7 +169,7 @@
 		if (!readLength) {
 			break;
 		}
-
+        
 		// Attempt to inflate the chunk of data
 		outputData = [decompressor uncompressBytes:inputData length:readLength error:&theError];
 		if (theError) {
@@ -196,7 +196,7 @@
 	
 	[inputStream close];
 	[outputStream close];
-
+    
 	NSError *error = [decompressor closeStream];
 	if (error) {
 		if (err) {
@@ -204,14 +204,14 @@
 		}
 		return NO;
 	}
-
+    
 	return YES;
 }
 
 
 + (NSError *)inflateErrorWithCode:(int)code
 {
-	return [NSError errorWithDomain:NetworkRequestErrorDomain code:ASICompressionError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Decompression of data failed with code %hi",code],NSLocalizedDescriptionKey,nil]];
+	return [NSError errorWithDomain:NetworkRequestErrorDomain code:ASICompressionError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Decompression of data failed with code %i",code],NSLocalizedDescriptionKey,nil]];
 }
 
 @synthesize streamReady;
